@@ -24,3 +24,4 @@ ToDo:
 - Beautify UI (took time)
 - Support more wallet (may need some addition logic)
 - Enhance error handling mechanism (took time)
+- Store `CONTRACT_ADDRESS` to environment variables
