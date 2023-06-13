@@ -15,3 +15,12 @@ pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+ToDo:
+
+- Listening to Event (emit)
+- Refetch some data while Event changed
+- Listening wallet/account/network change (do some)
+- Beautify UI (took time)
+- Support more wallet (may need some addition logic)
+- Enhance error handling mechanism (took time)
