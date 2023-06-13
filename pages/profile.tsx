@@ -1,15 +1,7 @@
-import { readContract, writeContract } from "@wagmi/core";
-import {
-  useAccount,
-  useBalance,
-  useConnect,
-  useDisconnect,
-  useEnsName,
-} from "wagmi";
-import { InjectedConnector } from "wagmi/connectors/injected";
+import { readContract } from "@wagmi/core";
+import { useAccount, useBalance, useDisconnect, useEnsName } from "wagmi";
 import ParallaxNetworkContractAbi from "@/utils/ParallaxNetworkContractAbi.json";
 import { useEffect, useState } from "react";
-import { parseEther } from "viem";
 import { useRouter } from "next/router";
 
 const CONTRACT_ADDRESS = "0xe63434289AB72602f4b446e00e716206c9A9B97a";
@@ -20,23 +12,11 @@ export default function Home() {
   const { data: ensName } = useEnsName({ address });
   const { data: balance } = useBalance({ address: address });
   const { disconnect } = useDisconnect();
-  const [mintedCount, setMintedCount] = useState<string>("");
-
-  const getTotalSupply = async () => {
-    const data = await readContract({
-      address: CONTRACT_ADDRESS,
-      abi: ParallaxNetworkContractAbi.abi,
-      functionName: "totalSupply",
-    });
-    setMintedCount((data as bigint).toString());
-  };
 
   useEffect(() => {
     if (!isConnected) {
       router.replace("/");
     }
-
-    getTotalSupply();
   }, [isConnected]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
