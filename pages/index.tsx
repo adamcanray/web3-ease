@@ -60,7 +60,7 @@ export default function Home() {
       <>
         <header className="bg-gray-950 flex justify-between items-center flex-col md:flex-row px-4 py-3">
           <div className="">
-            <p className="text-xl font-semibold text-white">Web3 Ease</p>
+            <p className="text-xl font-semibold text-white">Web3Ease</p>
           </div>
           <button
             onClick={() => router.push("/profile")}
