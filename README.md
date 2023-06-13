@@ -19,7 +19,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## ToDo:
 
 - Listening to Event (emit)
-- Refetch some data while Event changed
+- Refetch some data while Event emitted
 - Listening wallet/account/network change (do some)
 - Beautify UI (took time)
 - Support more wallet (may need some addition logic)
