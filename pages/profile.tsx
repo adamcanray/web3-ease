@@ -48,29 +48,18 @@ export default function Home() {
         </button>
 
         <div className="text-center px-4">
-          <div className="rounded-full border-2 border-gray-100 border-dashed inline-block">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-56 h-56"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-            </svg>
+          <h1 className="text-3xl font-semibold">
+            <span className="text-gradient-animate-2">Wallet</span> Detail
+          </h1>
+          <div className="mt-8 rounded-full border-2 border-gray-100 border-dashed inline-block w-56 h-56 overflow-hidden">
+            {/* eslint-disable-next-line */}
+            <img
+              src="/empty-wallet.gif"
+              alt="empty-wallet gif"
+              className="mx-auto w-full h-full object-cover"
+            />
           </div>
           <div className="mt-6 border-y-2 border-gray-100 border-dashed text-center p-4">
-            <p className="text-sm md:text-base font-light text-white">
-              Address
-            </p>
-            <p className="text-sm md:text-base font-semibold text-gradient-1">
-              {ensName ?? address}
-            </p>
             <p className="text-sm md:text-base font-light text-white">
               Network
             </p>
@@ -78,10 +67,17 @@ export default function Home() {
               {chain?.name}
             </p>
             <p className="text-sm md:text-base font-light text-white">
+              Address
+            </p>
+            <p className="text-sm md:text-base font-semibold text-gradient-1">
+              {ensName ?? address}
+            </p>
+            <p className="text-sm md:text-base font-light text-white">
               Balance
             </p>
-            <p className="text-sm md:text-base font-semibold text-gradient-2">
-              {balance?.formatted} {balance?.symbol}
+            <p className="text-xl md:text-3xl font-semibold">
+              <span className="text-gradient-2">{balance?.formatted}</span>{" "}
+              <span className="text-white">{balance?.symbol}</span>
             </p>
           </div>
           <div className="mt-8 w-full">
