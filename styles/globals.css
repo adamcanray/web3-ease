@@ -1,27 +1,48 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+@layer base {
+  body {
+    @apply text-white;
+    font-family: "Poppins", sans-serif;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+@layer components {
+  .text-gradient-animate-1 {
+    @apply bg-gradient-to-br from-cyan-500 via-violet-500 to-amber-500;
+    background-size: 200% auto;
+    background-clip: text;
+    text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    -webkit-animation: AnimationHero 12s ease infinite;
+    -moz-animation: AnimationHero 12s ease infinite;
+    -o-animation: AnimationHero 12s ease infinite;
+    animation: AnimationHero 12s ease infinite;
+  }
+
+  .text-gradient-1 {
+    @apply bg-gradient-to-r from-violet-500 to-cyan-500;
+    background-clip: text;
+    text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-gradient-2 {
+    @apply bg-gradient-to-r from-cyan-500 to-green-500;
+    background-clip: text;
+    text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .bg-gradient-1 {
+    @apply bg-gradient-to-r from-violet-500 to-cyan-500 hover:bg-gradient-to-l hover:opacity-80;
+  }
 }
