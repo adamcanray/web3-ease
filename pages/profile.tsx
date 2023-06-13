@@ -20,7 +20,7 @@ export default function Home() {
       <div className="min-h-screen flex flex-col justify-center items-center relative w-full max-w-5xl mx-auto">
         <button
           onClick={() => router.push("/")}
-          className="absolute top-3 left-3 px-3 py-2 flex items-center justify-center rounded-full bg-gray-950 hover:bg-gray-900 active:bg-gray-900"
+          className="absolute top-3 left-3 px-3 py-2 flex items-center justify-center rounded-full bg-gray-900 hover:bg-white active:bg-white text-white hover:text-gray-900 active:text-gray-900"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

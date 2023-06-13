@@ -118,7 +118,7 @@ export default function Home() {
           </div>
           <button
             onClick={() => router.push("/profile")}
-            className="text-base font-normal text-white hover:text-gray-950 border-2 rounded-full border-white hover:bg-white p-1 mt-2 md:mt-0 border-dashed"
+            className="text-base font-normal text-white hover:text-gray-950 rounded-full bg-gray-900 hover:bg-white p-1 mt-2 md:mt-0"
           >
             {address ? (
               <p className="flex items-center">
