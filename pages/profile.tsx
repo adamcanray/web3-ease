@@ -12,6 +12,7 @@ export default function Home() {
   useEffect(() => {
     if (!isConnected) {
       router.replace("/");
+      return;
     }
   }, [isConnected]); // eslint-disable-line react-hooks/exhaustive-deps
 

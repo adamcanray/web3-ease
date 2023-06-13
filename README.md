@@ -20,12 +20,12 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 - [✅] Listening to Event (emit)
 - [✅] Refetch some data while Event emitted
-- [⭕️] Listening wallet/account/network change (do some)
+- [⭕️] Listening account/network change (do some)
 - [✅] Beautify UI (took time)
 - [⭕️] Support more wallet (may need some addition logic)
 - [✅] Enhance error handling mechanism (took time)
-- [⭕️] Store `CONTRACT_ADDRESS` to environment variables
-- [⭕️] Store `NETWORK_CHAIN_ID` to environment variables
 - [✅] Enhance mint mechanism
 - [⭕️] Send ETH mechanism
 - [⭕️] View transaction history
+- [⭕️] Store `NETWORK_CHAIN_ID` to environment variables?
+- [⭕️] Store `CONTRACT_ADDRESS` to environment variables?

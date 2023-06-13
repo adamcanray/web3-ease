@@ -29,20 +29,6 @@ export default function Home() {
   const [mintIsLoading, setMintIsLoading] = useState<boolean>(false);
   const [refetchIsLoading, setRefetchIsLoading] = useState<boolean>(false);
 
-  const _ = watchContractEvent(
-    {
-      address: CONTRACT_ADDRESS,
-      abi: ParallaxNetworkContractAbi.abi,
-      eventName: "Transfer",
-      chainId: NETWORK_CHAIN_ID,
-    },
-    (log) => {
-      console.log("Transfer event: ", log);
-      getTotalSupply();
-      setRefetchIsLoading(false);
-    }
-  );
-
   const getTotalSupply = async () => {
     setErrorMessage("");
     try {
@@ -104,6 +90,19 @@ export default function Home() {
 
   useEffect(() => {
     if (!isConnected) return;
+    const _ = watchContractEvent(
+      {
+        address: CONTRACT_ADDRESS,
+        abi: ParallaxNetworkContractAbi.abi,
+        eventName: "Transfer",
+        chainId: NETWORK_CHAIN_ID,
+      },
+      (log) => {
+        console.log("Transfer event: ", log);
+        getTotalSupply();
+        setRefetchIsLoading(false);
+      }
+    );
     getTotalSupply();
   }, [isConnected]); // eslint-disable-line react-hooks/exhaustive-deps
 
