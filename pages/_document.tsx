@@ -29,7 +29,10 @@ export default function Document() {
           property="og:description"
           content="Your go-to Ethereum wallet for a hassle-free and intuitive experience"
         />
-        <meta property="og:image" content="/splash.png" />
+        <meta
+          property="og:image"
+          content="https://web3-ease.vercel.app/splash.png"
+        />
 
         {/* <!-- Twitter --> */}
         <meta property="twitter:card" content="summary_large_image" />
@@ -42,7 +45,10 @@ export default function Document() {
           property="twitter:description"
           content="Your go-to Ethereum wallet for a hassle-free and intuitive experience"
         />
-        <meta property="twitter:image" content="/splash.png" />
+        <meta
+          property="twitter:image"
+          content="https://web3-ease.vercel.app/splash.png"
+        />
       </Head>
       <body>
         <Main />
