@@ -22,6 +22,7 @@ export default function Home() {
   } = useConnect({ chainId: NETWORK_CHAIN_ID });
   const { chain } = useNetwork();
   const [mintedCount, setMintedCount] = useState<string>("");
+  const [balanceOf, setBalanceOf] = useState<string>("");
   const [toMintCount, setToMintCount] = useState<number>(1);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [mintIsLoading, setMintIsLoading] = useState<boolean>(false);
@@ -34,7 +35,14 @@ export default function Home() {
         abi: ParallaxNetworkContractAbi.abi,
         functionName: "totalSupply",
       });
+      const balanceOf = await readContract({
+        address: CONTRACT_ADDRESS,
+        abi: ParallaxNetworkContractAbi.abi,
+        functionName: "balanceOf",
+        args: [address],
+      });
       setMintedCount((totalSupply as bigint).toString());
+      setBalanceOf((balanceOf as bigint).toString());
     } catch (error) {
       console.log(error);
       setErrorMessage((error as Error).name);
@@ -44,6 +52,13 @@ export default function Home() {
   const doMint = async () => {
     setErrorMessage("");
     setMintIsLoading(true);
+
+    if (toMintCount < 0) {
+      setErrorMessage("Only accept >= 0");
+      setMintIsLoading(false);
+      return;
+    }
+
     try {
       const { hash } = await writeContract({
         address: CONTRACT_ADDRESS,
@@ -63,14 +78,13 @@ export default function Home() {
   };
 
   const toMintCountOnChange = (e: React.FormEvent<HTMLInputElement>): void => {
-    if (parseInt(e.currentTarget.value) >= 0) {
-      setToMintCount(parseInt(e.currentTarget.value));
-    }
+    setToMintCount(parseInt(e.currentTarget.value));
+    setErrorMessage("");
   };
 
   useEffect(() => {
     getTotalSupply();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   /**
    * Renders this UI on connection error, unless the code equals 4001
@@ -90,9 +104,7 @@ export default function Home() {
         </p>
       </div>
     );
-  }
-
-  if (isConnected)
+  } else if (isConnected) {
     return (
       <div className="bg-gray-950">
         <header className="flex justify-between items-center flex-col sm:flex-row px-4 py-3 w-full max-w-5xl mx-auto">
@@ -140,9 +152,13 @@ export default function Home() {
             {/* eslint-disable-next-line */}
             <img src="/observing.gif" alt="observing gif" className="mx-auto" />
             <div className="border-x-2 border-b-2 border-gray-100 w-full p-3 border-dashed">
-              <p className="text-lg font-normal text-white">Token Minted:</p>
-              <span className="mt-1 text-2xl font-semibold">
+              <p className="text-lg font-normal text-white">Token Supply:</p>
+              <span className="mt-1 text-2xl font-semibold text-gradient-1">
                 {mintedCount || "-"}
+              </span>
+              <p className="text-lg font-normal text-white">Minted:</p>
+              <span className="mt-1 text-2xl font-semibold text-gradient-2">
+                {balanceOf || "-"}
               </span>
             </div>
             <div className="border-l-2 border-gray-100 border-dashed h-8"></div>
@@ -150,7 +166,7 @@ export default function Home() {
               <p className="text-white text-lg">To mint:</p>
               <input
                 type="number"
-                className="border-b-2 border-b-gray-100 bg-transparent w-full p-2 text-2xl focus:outline-none text-center border-dashed"
+                className="border-b-2 border-b-gray-100 bg-transparent w-full p-2 text-2xl focus:outline-none text-center border-dashed text-gradient-2"
                 onChange={toMintCountOnChange}
                 value={toMintCount}
               />
@@ -165,7 +181,7 @@ export default function Home() {
               <button
                 disabled={chain?.id !== NETWORK_CHAIN_ID}
                 onClick={() => doMint()}
-                className="w-full px-3 py-2 text-lg rounded-lg bg-gradient-1 disabled:opacity-80 disabled:cursor-not-allowed"
+                className="w-full px-3 py-2 text-lg rounded-lg bg-gradient-1 disabled:opacity-80 disabled:cursor-not-allowed font-semibold"
               >
                 Mint NFT {mintIsLoading ? "(loading..)" : ""}
               </button>
@@ -174,6 +190,7 @@ export default function Home() {
         </div>
       </div>
     );
+  }
 
   return (
     <div className="bg-gray-950 min-h-screen flex justify-center items-center px-4">
