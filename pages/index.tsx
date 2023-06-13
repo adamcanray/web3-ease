@@ -73,9 +73,10 @@ export default function Home() {
 
   if (connectIsError) {
     return (
-      <div className="bg-gray-950 min-h-screen flex justify-center items-center">
-        <p className="text-lg font-semibold text-red-500">
-          Something went wrong
+      <div className="bg-gray-950 min-h-screen flex flex-col justify-center items-center">
+        <p className="text-xl font-medium text-white">Something went wrong</p>
+        <p className="text-base font-normal text-white">
+          You maybe want to refresh this page
         </p>
       </div>
     );
