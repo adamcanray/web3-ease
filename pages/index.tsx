@@ -1,10 +1,11 @@
-import { readContract, writeContract } from "@wagmi/core";
+import { readContract, writeContract, watchContractEvent } from "@wagmi/core";
 import { useAccount, useConnect, useNetwork } from "wagmi";
 import ParallaxNetworkContractAbi from "@/utils/ParallaxNetworkContractAbi.json";
 import { useEffect, useState } from "react";
 import { parseEther } from "viem";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import Image from "next/image";
 
 const CONTRACT_ADDRESS = "0xe63434289AB72602f4b446e00e716206c9A9B97a";
 const NETWORK_CHAIN_ID = 11155111;
@@ -26,6 +27,21 @@ export default function Home() {
   const [toMintCount, setToMintCount] = useState<number>(1);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [mintIsLoading, setMintIsLoading] = useState<boolean>(false);
+  const [refetchIsLoading, setRefetchIsLoading] = useState<boolean>(false);
+
+  const _ = watchContractEvent(
+    {
+      address: CONTRACT_ADDRESS,
+      abi: ParallaxNetworkContractAbi.abi,
+      eventName: "Transfer",
+      chainId: NETWORK_CHAIN_ID,
+    },
+    (log) => {
+      console.log("Transfer event: ", log);
+      getTotalSupply();
+      setRefetchIsLoading(false);
+    }
+  );
 
   const getTotalSupply = async () => {
     setErrorMessage("");
@@ -34,12 +50,14 @@ export default function Home() {
         address: CONTRACT_ADDRESS,
         abi: ParallaxNetworkContractAbi.abi,
         functionName: "totalSupply",
+        chainId: NETWORK_CHAIN_ID,
       });
       const balanceOf = await readContract({
         address: CONTRACT_ADDRESS,
         abi: ParallaxNetworkContractAbi.abi,
         functionName: "balanceOf",
         args: [address],
+        chainId: NETWORK_CHAIN_ID,
       });
       setMintedCount((totalSupply as bigint).toString());
       setBalanceOf((balanceOf as bigint).toString());
@@ -66,10 +84,12 @@ export default function Home() {
         functionName: "safeMint",
         args: [toMintCount],
         value: parseEther(`${0.001 * toMintCount}`),
+        chainId: NETWORK_CHAIN_ID,
       });
 
       console.log("Minted: ", hash);
       setMintIsLoading(false);
+      setRefetchIsLoading(true);
     } catch (error) {
       console.log(error);
       setErrorMessage((error as Error).name);
@@ -83,8 +103,9 @@ export default function Home() {
   };
 
   useEffect(() => {
+    if (!isConnected) return;
     getTotalSupply();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isConnected]); // eslint-disable-line react-hooks/exhaustive-deps
 
   /**
    * Renders this UI on connection error, unless the code equals 4001
@@ -153,12 +174,30 @@ export default function Home() {
             <img src="/observing.gif" alt="observing gif" className="mx-auto" />
             <div className="border-x-2 border-b-2 border-gray-100 w-full p-3 border-dashed">
               <p className="text-lg font-normal text-white">Token Supply:</p>
-              <span className="mt-1 text-2xl font-semibold text-gradient-1">
-                {mintedCount || "-"}
+              <span className="mt-1 text-2xl font-semibold text-gradient-1 inline-flex items-center relative">
+                {mintedCount || "-"}{" "}
+                {refetchIsLoading && (
+                  <Image
+                    src="/loading-three-dots.svg"
+                    width={24}
+                    height={6}
+                    alt="loading-three-dots"
+                    className="ml-2 absolute -right-8"
+                  />
+                )}
               </span>
               <p className="text-lg font-normal text-white">Minted:</p>
-              <span className="mt-1 text-2xl font-semibold text-gradient-2">
-                {balanceOf || "-"}
+              <span className="mt-1 text-2xl font-semibold text-gradient-2 inline-flex items-center relative">
+                {balanceOf || "-"}{" "}
+                {refetchIsLoading && (
+                  <Image
+                    src="/loading-three-dots.svg"
+                    width={24}
+                    height={6}
+                    alt="loading-three-dots"
+                    className="ml-2 absolute -right-8"
+                  />
+                )}
               </span>
             </div>
             <div className="border-l-2 border-gray-100 border-dashed h-8"></div>

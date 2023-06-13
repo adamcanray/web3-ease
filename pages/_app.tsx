@@ -2,9 +2,11 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { WagmiConfig, createConfig, configureChains, sepolia } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
-
-import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import dynamic from "next/dynamic";
+import { MetaMaskConnector } from "wagmi/connectors/metaMask";
+// import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
+// import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
+// import { InjectedConnector } from "wagmi/connectors/injected";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [sepolia],
