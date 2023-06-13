@@ -5,6 +5,7 @@ import {
   useConnect,
   useDisconnect,
   useEnsName,
+  useNetwork,
 } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import ParallaxNetworkContractAbi from "@/utils/ParallaxNetworkContractAbi.json";
@@ -19,8 +20,12 @@ export default function Home() {
   const { address, isConnected } = useAccount();
   const { connect, connectors, error, isLoading, pendingConnector } =
     useConnect();
+  const { chain, chains } = useNetwork();
   const [mintedCount, setMintedCount] = useState<string>("");
   const [toMintCount, setToMintCount] = useState<number>(1);
+
+  console.log(chain);
+  console.log(chains);
 
   const getTotalSupply = async () => {
     const totalSupply = await readContract({
@@ -92,10 +97,16 @@ export default function Home() {
                 value={toMintCount}
               />
             </div>
-            <div className="mt-2">
+            <div className="mt-2 text-center">
+              {chain?.id !== 11155111 && (
+                <p className="text-sm text-red-500 mb-1">
+                  Your not on Sepolia testnet
+                </p>
+              )}
               <button
-                className="px-2 py-1 rounded bg-indigo-500 hover:bg-indigo-600 transition-colors"
+                disabled={chain?.id !== 11155111}
                 onClick={() => doMint()}
+                className="px-2 py-1 rounded bg-indigo-500 hover:bg-indigo-600 disabled:opacity-80 disabled:cursor-not-allowed transition-colors"
               >
                 Mint NFT
               </button>
