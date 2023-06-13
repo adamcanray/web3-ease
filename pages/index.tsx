@@ -11,22 +11,38 @@ const NETWORK_CHAIN_ID = 11155111;
 export default function Home() {
   const router = useRouter();
   const { address, isConnected } = useAccount();
-  const { connect, connectors, error, isLoading, pendingConnector } =
-    useConnect({ chainId: NETWORK_CHAIN_ID });
-  const { chain, chains } = useNetwork();
+  const {
+    connect,
+    connectors,
+    error,
+    isLoading,
+    pendingConnector,
+    isError: connectIsError,
+  } = useConnect({ chainId: NETWORK_CHAIN_ID });
+  const { chain } = useNetwork();
   const [mintedCount, setMintedCount] = useState<string>("");
   const [toMintCount, setToMintCount] = useState<number>(1);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [mintIsLoading, setMintIsLoading] = useState<boolean>(false);
 
   const getTotalSupply = async () => {
-    const totalSupply = await readContract({
-      address: CONTRACT_ADDRESS,
-      abi: ParallaxNetworkContractAbi.abi,
-      functionName: "totalSupply",
-    });
-    setMintedCount((totalSupply as bigint).toString());
+    setErrorMessage("");
+    try {
+      const totalSupply = await readContract({
+        address: CONTRACT_ADDRESS,
+        abi: ParallaxNetworkContractAbi.abi,
+        functionName: "totalSupply",
+      });
+      setMintedCount((totalSupply as bigint).toString());
+    } catch (error) {
+      console.log(error);
+      setErrorMessage((error as Error).name);
+    }
   };
 
   const doMint = async () => {
+    setErrorMessage("");
+    setMintIsLoading(true);
     try {
       const { hash } = await writeContract({
         address: CONTRACT_ADDRESS,
@@ -37,23 +53,38 @@ export default function Home() {
       });
 
       console.log("Minted: ", hash);
+      setMintIsLoading(false);
     } catch (error) {
       console.log(error);
+      setErrorMessage((error as Error).name);
+      setMintIsLoading(false);
     }
   };
 
   const toMintCountOnChange = (e: React.FormEvent<HTMLInputElement>): void => {
-    setToMintCount(parseInt(e.currentTarget.value));
+    if (parseInt(e.currentTarget.value) >= 0) {
+      setToMintCount(parseInt(e.currentTarget.value));
+    }
   };
 
   useEffect(() => {
     getTotalSupply();
   }, []);
 
+  if (connectIsError) {
+    return (
+      <div className="bg-gray-950 min-h-screen flex justify-center items-center">
+        <p className="text-lg font-semibold text-red-500">
+          Something went wrong
+        </p>
+      </div>
+    );
+  }
+
   if (isConnected)
     return (
-      <>
-        <header className="bg-gray-950 flex justify-between items-center flex-col md:flex-row px-4 py-3">
+      <div className="bg-gray-950">
+        <header className="flex justify-between items-center flex-col md:flex-row px-4 py-3 w-full max-w-5xl mx-auto">
           <div className="">
             <p className="text-xl font-semibold text-white">Web3Ease</p>
           </div>
@@ -72,22 +103,27 @@ export default function Home() {
             )}
           </button>
         </header>
-        <div className="bg-gray-950 min-h-screen flex justify-center items-center">
-          <div className="flex flex-col items-center">
-            <p className="text-lg font-normal text-white">
-              Token Minted:{" "}
-              <span className="text-lg font-semibold">{mintedCount}</span>
-            </p>
-            <div className="mt-8">
-              <p>To mint:</p>
+        <div className="min-h-screen flex justify-center items-center px-4">
+          <div className="flex flex-col items-center w-full max-w-md">
+            {/* eslint-disable-next-line */}
+            <img src="/observing.gif" alt="observing gif" className="mx-auto" />
+            <div className="mt-4 border border-gray-100 w-full p-3">
+              <p className="text-lg font-normal text-white">Token Minted:</p>
+              <span className="mt-1 text-lg font-semibold">
+                {mintedCount || "-"}
+              </span>
+            </div>
+            <div className="mt-8 w-full">
+              <p className="text-white text-lg">To mint:</p>
               <input
                 type="number"
-                className="border-b border-b-gray-100 bg-transparent w-auto sm:w-96"
+                className="border-b border-b-gray-100 bg-transparent w-full p-2 text-lg focus:outline-none"
                 onChange={toMintCountOnChange}
                 value={toMintCount}
               />
             </div>
-            <div className="mt-2 text-center">
+            <div className="mt-2 text-center w-full">
+              <p className="text-sm text-red-500 mb-1">{errorMessage}</p>
               {chain?.id !== NETWORK_CHAIN_ID && (
                 <p className="text-sm text-red-500 mb-1">
                   Your not on Sepolia testnet
@@ -96,20 +132,24 @@ export default function Home() {
               <button
                 disabled={chain?.id !== NETWORK_CHAIN_ID}
                 onClick={() => doMint()}
-                className="px-2 py-1 rounded bg-indigo-500 hover:bg-indigo-600 disabled:opacity-80 disabled:cursor-not-allowed transition-colors"
+                className="w-full px-2 py-1 rounded bg-indigo-500 hover:bg-indigo-600 disabled:opacity-80 disabled:cursor-not-allowed transition-colors"
               >
-                Mint NFT
+                Mint NFT {mintIsLoading ? "(loading..)" : ""}
               </button>
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
 
   return (
-    <div className="bg-gray-950 min-h-screen flex justify-center items-center">
+    <div className="bg-gray-950 min-h-screen flex justify-center items-center px-4">
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-white">Welcome to Web3Ease!</h1>
+        {/* eslint-disable-next-line */}
+        <img src="/mth.gif" alt="mth gif" className="mx-auto" />
+        <h1 className="mt-4 text-2xl font-bold text-white">
+          Welcome to Web3Ease!
+        </h1>
         <p className="text-lg font-normal text-white">
           Your go-to Ethereum wallet for a hassle-free and intuitive experience
         </p>
@@ -128,7 +168,7 @@ export default function Home() {
               {!connector.ready && " (unsupported)"}
               {isLoading &&
                 connector.id === pendingConnector?.id &&
-                " (connecting)"}
+                " (connecting..)"}
             </button>
           ))}
 
