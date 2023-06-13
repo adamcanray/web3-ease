@@ -1,31 +1,21 @@
 import { readContract, writeContract } from "@wagmi/core";
-import {
-  useAccount,
-  useBalance,
-  useConnect,
-  useDisconnect,
-  useEnsName,
-  useNetwork,
-} from "wagmi";
-import { InjectedConnector } from "wagmi/connectors/injected";
+import { useAccount, useConnect, useNetwork } from "wagmi";
 import ParallaxNetworkContractAbi from "@/utils/ParallaxNetworkContractAbi.json";
 import { useEffect, useState } from "react";
 import { parseEther } from "viem";
 import { useRouter } from "next/router";
 
 const CONTRACT_ADDRESS = "0xe63434289AB72602f4b446e00e716206c9A9B97a";
+const NETWORK_CHAIN_ID = 11155111;
 
 export default function Home() {
   const router = useRouter();
   const { address, isConnected } = useAccount();
   const { connect, connectors, error, isLoading, pendingConnector } =
-    useConnect();
+    useConnect({ chainId: NETWORK_CHAIN_ID });
   const { chain, chains } = useNetwork();
   const [mintedCount, setMintedCount] = useState<string>("");
   const [toMintCount, setToMintCount] = useState<number>(1);
-
-  console.log(chain);
-  console.log(chains);
 
   const getTotalSupply = async () => {
     const totalSupply = await readContract({
@@ -98,13 +88,13 @@ export default function Home() {
               />
             </div>
             <div className="mt-2 text-center">
-              {chain?.id !== 11155111 && (
+              {chain?.id !== NETWORK_CHAIN_ID && (
                 <p className="text-sm text-red-500 mb-1">
                   Your not on Sepolia testnet
                 </p>
               )}
               <button
-                disabled={chain?.id !== 11155111}
+                disabled={chain?.id !== NETWORK_CHAIN_ID}
                 onClick={() => doMint()}
                 className="px-2 py-1 rounded bg-indigo-500 hover:bg-indigo-600 disabled:opacity-80 disabled:cursor-not-allowed transition-colors"
               >
@@ -129,7 +119,9 @@ export default function Home() {
             <button
               disabled={!connector.ready}
               key={connector.id}
-              onClick={() => connect({ connector })}
+              onClick={() => {
+                connect({ connector });
+              }}
               className="px-2 py-1 rounded bg-orange-500 hover:bg-orange-600"
             >
               Connect with {connector.name}
