@@ -1,4 +1,10 @@
-import { useAccount, useBalance, useDisconnect, useEnsName } from "wagmi";
+import {
+  useAccount,
+  useBalance,
+  useDisconnect,
+  useEnsName,
+  useNetwork,
+} from "wagmi";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 
@@ -7,6 +13,7 @@ export default function Home() {
   const { address, isConnected } = useAccount();
   const { data: ensName } = useEnsName({ address });
   const { data: balance } = useBalance({ address: address });
+  const { chain } = useNetwork();
   const { disconnect } = useDisconnect();
 
   useEffect(() => {
@@ -63,6 +70,12 @@ export default function Home() {
             </p>
             <p className="text-sm md:text-base font-semibold text-gradient-1">
               {ensName ?? address}
+            </p>
+            <p className="text-sm md:text-base font-light text-white">
+              Network
+            </p>
+            <p className="text-sm md:text-base font-semibold text-gradient-2">
+              {chain?.name}
             </p>
             <p className="text-sm md:text-base font-light text-white">
               Balance

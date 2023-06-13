@@ -156,7 +156,13 @@ export default function Home() {
                     d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"
                   />
                 </svg>
-                <span className="ml-1">Wallet: </span>
+                <span className="ml-1">
+                  Wallet(
+                  <span className="text-gradient-2 font-medium">
+                    {chain?.name}
+                  </span>
+                  ):{" "}
+                </span>
                 <span className="text-gradient-1">
                   {address.slice(0, 6)}...
                   {address.slice(-4)}{" "}
