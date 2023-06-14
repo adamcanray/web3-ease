@@ -238,11 +238,17 @@ export default function Home() {
 
   return (
     <div className="bg-gray-950 min-h-screen flex justify-center items-center px-4">
-      <div className="text-center w-full max-w-5xl mx-auto">
+      <div className="text-center w-full max-w-2xl mx-auto">
         {/* eslint-disable-next-line */}
-        <img src="/mth.gif" alt="mth gif" className="mx-auto" />
+        <img src="/mth.gif" alt="mth gif" className="mx-auto w-full" />
         <div className="flex justify-center">
-          <div className="border-l-2 border-gray-100 border-dashed h-8"></div>
+          <div className="border-x-2 border-b-2 border-gray-100 border-dashed h-4 w-full"></div>
+        </div>
+        <div className="flex justify-center">
+          <div className="border-l-2 border-gray-100 border-dashed h-6 w-1/4"></div>
+        </div>
+        <div className="flex justify-center">
+          <div className="border-t-2 border-r-2 border-gray-100 border-dashed h-8 w-1/4"></div>
         </div>
         <h1 className="mt-2 text-4xl font-bold text-white">
           Welcome to <span className="text-gradient-animate-1">Web3Ease</span>!
